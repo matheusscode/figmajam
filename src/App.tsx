@@ -35,7 +35,9 @@ const INITIAL_NODES = [
       x: 860,
       y: 300,
     },
-    data: {},
+    data: {
+      text: "",
+    },
   },
 ] as Node[];
 
@@ -69,7 +71,9 @@ export default function App() {
             x: event.clientX - left - 75,
             y: event.clientY - top,
           }),
-          data: {},
+          data: {
+            text: "",
+          },
         };
 
         setNodes((nds) => nds.concat(newNode));
@@ -98,6 +102,16 @@ export default function App() {
     edgeUpdateSuccessful.current = true;
   }, []);
 
+  const onNodeDragStop = useCallback(
+    (event, node) => {
+      const updatedNodes = nodes.map((n) =>
+        n.id === node.id ? { ...n, ...node.data } : n
+      );
+      setNodes(updatedNodes);
+    },
+    [nodes]
+  );
+
   function addSquareNode() {
     setNodes((nodes) => [
       ...nodes,
@@ -108,14 +122,20 @@ export default function App() {
           x: 750,
           y: 350,
         },
-        data: {},
+        data: {
+          text: "",
+        },
       },
     ]);
   }
 
+  const elements = nodes.concat(edges);
+
   return (
     <div className="w-screen h-screen" ref={reactFlowWrapper}>
       <ReactFlow
+        elements={elements}
+        onNodeDragStop={onNodeDragStop}
         nodeTypes={NODE_TYPES}
         edgeTypes={EDGE_TYPES}
         nodes={nodes}
