@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -6,8 +6,11 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
   ConnectionMode,
-  addEdge,
   Node,
+  useReactFlow,
+  MiniMap,
+  updateEdge,
+  addEdge,
 } from "reactflow";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { zinc } from "tailwindcss/colors";
@@ -15,8 +18,6 @@ import "reactflow/dist/style.css";
 
 import { Square } from "./components/nodes/Square";
 import DefaultEdge from "./components/edges/DefaultEdge";
-
-// Nodes, Edges
 
 const NODE_TYPES = {
   square: Square,
@@ -31,29 +32,70 @@ const INITIAL_NODES = [
     id: crypto.randomUUID(),
     type: "square",
     position: {
-      x: 200,
-      y: 400,
+      x: 860,
+      y: 300,
     },
     data: {},
   },
-
-  {
-    id: crypto.randomUUID(),
-    type: "square",
-    position: {
-      x: 1000,
-      y: 400,
-    },
-    data: {},
-  },
-] satisfies Node[];
+] as Node[];
 
 export default function App() {
+  const edgeUpdateSuccessful = useRef(true);
+  const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
+  const { project } = useReactFlow();
 
   const onConnect = useCallback((connection: Connection) => {
     return setEdges((edges) => addEdge(connection, edges));
+  }, []);
+
+  const onConnectStart = useCallback((_, { nodeId }) => {
+    connectingNodeId.current = nodeId;
+  }, []);
+
+  const onConnectEnd = useCallback(
+    (event) => {
+      const targetIsPane = event.target.classList.contains("react-flow__pane");
+
+      if (targetIsPane) {
+        const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+        const id = crypto.randomUUID();
+        const newNode = {
+          id,
+          type: "square",
+          position: project({
+            x: event.clientX - left - 75,
+            y: event.clientY - top,
+          }),
+          data: {},
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) =>
+          eds.concat({ id, source: connectingNodeId.current, target: id })
+        );
+      }
+    },
+    [project]
+  );
+
+  const onEdgeUpdateStart = useCallback(() => {
+    edgeUpdateSuccessful.current = false;
+  }, []);
+
+  const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
+    edgeUpdateSuccessful.current = true;
+    setEdges((els) => updateEdge(oldEdge, newConnection, els));
+  }, []);
+
+  const onEdgeUpdateEnd = useCallback((_, edge) => {
+    if (!edgeUpdateSuccessful.current) {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    }
+
+    edgeUpdateSuccessful.current = true;
   }, []);
 
   function addSquareNode() {
@@ -72,20 +114,26 @@ export default function App() {
   }
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen" ref={reactFlowWrapper}>
       <ReactFlow
         nodeTypes={NODE_TYPES}
         edgeTypes={EDGE_TYPES}
         nodes={nodes}
         edges={edges}
         onEdgesChange={onEdgesChange}
+        onEdgeUpdate={onEdgeUpdate}
+        onEdgeUpdateStart={onEdgeUpdateStart}
+        onEdgeUpdateEnd={onEdgeUpdateEnd}
         onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
         onNodesChange={onNodesChange}
         connectionMode={ConnectionMode.Loose}
         defaultEdgeOptions={{
           type: "default",
         }}
       >
+        <MiniMap zoomable pannable />
         <Background gap={12} size={2} color={zinc[200]} />
         <Controls />
       </ReactFlow>
