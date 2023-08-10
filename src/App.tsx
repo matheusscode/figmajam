@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -14,10 +14,12 @@ import ReactFlow, {
 } from "reactflow";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { zinc } from "tailwindcss/colors";
+import { IoIosArrowUp } from "react-icons/io";
+import { v4 as uuidv4 } from "uuid";
 import "reactflow/dist/style.css";
 
-import { Square } from "./components/nodes/Square";
-import DefaultEdge from "./components/edges/DefaultEdge";
+import { Square } from "./components/Nodes/Square";
+import DefaultEdge from "./components/Edges/DefaultEdge";
 
 const NODE_TYPES = {
   square: Square,
@@ -29,7 +31,7 @@ const EDGE_TYPES = {
 
 const INITIAL_NODES = [
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     type: "square",
     position: {
       x: 860,
@@ -49,6 +51,8 @@ export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
   const { project } = useReactFlow();
 
+  const [nodeTypes, setNodeType] = useState();
+
   const onConnect = useCallback((connection: Connection) => {
     return setEdges((edges) => addEdge(connection, edges));
   }, []);
@@ -63,7 +67,7 @@ export default function App() {
 
       if (targetIsPane) {
         const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
-        const id = crypto.randomUUID();
+        const id = uuidv4();
         const newNode = {
           id,
           type: "square",
@@ -116,7 +120,7 @@ export default function App() {
     setNodes((nodes) => [
       ...nodes,
       {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         type: "square",
         position: {
           x: 750,
@@ -129,12 +133,9 @@ export default function App() {
     ]);
   }
 
-  const elements = nodes.concat(edges);
-
   return (
-    <div className="w-screen h-screen" ref={reactFlowWrapper}>
+    <div className="w-screen h-screen relative" ref={reactFlowWrapper}>
       <ReactFlow
-        elements={elements}
         onNodeDragStop={onNodeDragStop}
         nodeTypes={NODE_TYPES}
         edgeTypes={EDGE_TYPES}
@@ -158,11 +159,14 @@ export default function App() {
         <Controls />
       </ReactFlow>
 
-      <Toolbar.Root className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-96 overflow-hidden">
+      <Toolbar.Root className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-1/4 overflow-hidden">
         <Toolbar.Button
           onClick={addSquareNode}
           className="w-32 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-2"
         />
+        <Toolbar.Button className=" absolute  h-6 w-6 ml-1 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center">
+          <IoIosArrowUp className="w-6" />
+        </Toolbar.Button>
       </Toolbar.Root>
     </div>
   );
