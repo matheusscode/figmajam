@@ -159,15 +159,15 @@ export default function App() {
         <Controls />
       </ReactFlow>
 
-      <div className="fixed flex bottom-20 left-1/2 z-2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-1/3 ">
+      <div className="fixed flex bottom-16 left-1/2 z-2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-1/3 ">
         <div className="h-20 overflow-hidden">
           <button
             onClick={addSquareNode}
-            className="w-32 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-4"
+            className="w-28 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-2"
           />
         </div>
         <button
-          className=" absolute  h-6 w-6 ml-1 transform - translate-x-32 ml-2 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
+          className=" absolute  h-6 w-6 ml-1 transform - translate-x-28 ml-2 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
           onClick={() => setOptions(!options)}
         >
           <IoIosArrowUp className="w-6" />
