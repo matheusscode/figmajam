@@ -619,6 +619,21 @@
     d3-zoom "^3.0.0"
     zustand "^4.3.1"
 
+"@reactflow/core@11.8.0":
+  version "11.8.0"
+  resolved "https://registry.yarnpkg.com/@reactflow/core/-/core-11.8.0.tgz#1aed715987017e368e24ce5c99186d39bc316a18"
+  integrity sha512-myTSqVq2HFsxixqwV9Q7rsfPbUN/eY33obLUC1LQyLh7td/42ez80OeInjM+YAR+qnXY1+5CLrxmYl0TvVLeNA==
+  dependencies:
+    "@types/d3" "^7.4.0"
+    "@types/d3-drag" "^3.0.1"
+    "@types/d3-selection" "^3.0.3"
+    "@types/d3-zoom" "^3.0.1"
+    classcat "^5.0.3"
+    d3-drag "^3.0.0"
+    d3-selection "^3.0.0"
+    d3-zoom "^3.0.0"
+    zustand "^4.4.1"
+
 "@reactflow/minimap@11.5.4":
   version "11.5.4"
   resolved "https://registry.yarnpkg.com/@reactflow/minimap/-/minimap-11.5.4.tgz#b072094f7d827660f0205796d5f22fbbf6e31cc3"
@@ -642,6 +657,17 @@
     d3-drag "^3.0.0"
     d3-selection "^3.0.0"
     zustand "^4.3.1"
+
+"@reactflow/node-resizer@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@reactflow/node-resizer/-/node-resizer-2.1.2.tgz#cb6ae2eb3d4629695eb771bc785205fd2d067b5b"
+  integrity sha512-eJNnQmeSAcygRrNcHDr/7CxRAEwUIuSUzFaxs1KPp263iR4SltzJ2P3AOXLIOqiK/q2EoCHwss+6TRkZOCi71A==
+  dependencies:
+    "@reactflow/core" "11.8.0"
+    classcat "^5.0.4"
+    d3-drag "^3.0.0"
+    d3-selection "^3.0.0"
+    zustand "^4.4.1"
 
 "@reactflow/node-toolbar@1.2.3":
   version "1.2.3"
@@ -2362,7 +2388,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand@^4.3.1:
+zustand@^4.3.1, zustand@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.4.1.tgz#0cd3a3e4756f21811bd956418fdc686877e8b3b0"
   integrity sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==
