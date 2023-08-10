@@ -2,19 +2,18 @@ import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
 import { useEffect, useRef, useState } from "react";
 
 export function Square({ id, selected, data, updateNode }: NodeProps) {
+  const [touchSquare, setTouchSquare] = useState<boolean>(false);
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
 
-  const handleOpen = () => {
-    setActive(true);
+  const handleOpenContentSquare = () => {
+    setTouchSquare(true);
   };
 
-  const handleClose = () => {
+  const handleCloseContentSquare = () => {
     setActive(false);
   };
-
-  console.log(text.length);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -23,7 +22,7 @@ export function Square({ id, selected, data, updateNode }: NodeProps) {
       const scrollHeight = textareaRef.current.scrollHeight;
       const textLength = text.length;
 
-      if (textLength > 21) {
+      if (textLength > 29) {
         setExpanded(true);
         textareaRef.current.style.height = "initial";
         textareaRef.current.style.overflow = "hidden";
@@ -49,7 +48,7 @@ export function Square({ id, selected, data, updateNode }: NodeProps) {
         !textareaRef.current.contains(event.target as Node) &&
         !expanded
       ) {
-        handleClose();
+        handleCloseContentSquare();
       }
     };
 
@@ -61,7 +60,10 @@ export function Square({ id, selected, data, updateNode }: NodeProps) {
   }, [expanded]);
 
   return (
-    <div className="bg-violet-500 rounded w-full h-full min-w-[200px] min-h-[200px]">
+    <div
+      className="bg-violet-500 rounded w-full h-full min-w-[200px] min-h-[200px]"
+      onClick={handleOpenContentSquare}
+    >
       <NodeResizer
         minWidth={200}
         minHeight={200}
@@ -95,25 +97,26 @@ export function Square({ id, selected, data, updateNode }: NodeProps) {
         position={Position.Bottom}
         className="-bottom-5 w-3 h-3 bg-blue-400/80"
       />
-      <div onClick={handleOpen}>
-        <textarea
-          ref={textareaRef}
-          value={text}
-          onClick={handleOpen}
-          onFocus={handleClose}
-          onChange={(e) => setText(e.target.value)}
-          className={`absolute inset-0 bg-transparent outline-none border-none text-white p-2 resize-none rounded text-center ${
-            expanded
-              ? "h-[200px] transition-all duration-300"
-              : "h-[30px] mt-auto mb-auto transition-all duration-300"
-          }`}
-          placeholder="Digite algo aqui..."
-          onBlur={() => {
-            if (!text.trim()) {
-              setText("");
-            }
-          }}
-        />
+      <div>
+        {touchSquare ? (
+          <textarea
+            ref={textareaRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className={`absolute inset-0 bg-transparent outline-none border-none text-white p-2 resize-none rounded text-center ${
+              expanded
+                ? "h-[200px] transition-all duration-300"
+                : "h-[50px] mt-auto mb-auto transition-all duration-300"
+            }`}
+            placeholder="Digite algo aqui..."
+            onBlur={() => {
+              if (!text.trim()) {
+                setText("");
+                setTouchSquare(false);
+              }
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );

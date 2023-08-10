@@ -34,7 +34,7 @@ const INITIAL_NODES = [
     id: uuidv4(),
     type: "square",
     position: {
-      x: 860,
+      x: 770,
       y: 300,
     },
     data: {
@@ -44,13 +44,13 @@ const INITIAL_NODES = [
 ] as Node[];
 
 export default function App() {
+  const [options, setOptions] = useState<boolean>();
   const edgeUpdateSuccessful = useRef(true);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
   const { project } = useReactFlow();
-
   const [nodeTypes, setNodeType] = useState();
 
   const onConnect = useCallback((connection: Connection) => {
@@ -159,15 +159,39 @@ export default function App() {
         <Controls />
       </ReactFlow>
 
-      <Toolbar.Root className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-1/4 overflow-hidden">
-        <Toolbar.Button
-          onClick={addSquareNode}
-          className="w-32 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-2"
-        />
-        <Toolbar.Button className=" absolute  h-6 w-6 ml-1 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center">
+      <div className="fixed flex bottom-20 left-1/2 z-2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-1/3 ">
+        <div className="h-20 overflow-hidden">
+          <button
+            onClick={addSquareNode}
+            className="w-32 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-4"
+          />
+        </div>
+        <button
+          className=" absolute  h-6 w-6 ml-1 transform - translate-x-32 ml-2 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
+          onClick={() => setOptions(!options)}
+        >
           <IoIosArrowUp className="w-6" />
-        </Toolbar.Button>
-      </Toolbar.Root>
+        </button>
+        {options ? <NodeOptions options={options} /> : null}
+      </div>
+    </div>
+  );
+}
+
+function NodeOptions({ options }: any) {
+  return (
+    <div
+      className={`absolute left-1/2 ${
+        options ? "z-2" : "-z-50"
+      }  -top-12 -translate-x-1/2 
+      bg-white rounded-tr-2xl rounded-tl-2xl border border-zinc-300 px-8 h-12 w-1/2
+      overflow-hidden transition-transform transition-opacity duration-300 ease-in-out`}
+    >
+      <ul className=" flex gap-1 items-center h-full w-full">
+        <li>d</li>
+        <li>d</li>
+        <li>d</li>
+      </ul>
     </div>
   );
 }
