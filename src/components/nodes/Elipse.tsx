@@ -5,7 +5,7 @@ interface ElipseProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
 }
 
-export function Elipse({ id, selected, data, updateNodeData }: ElipseProps) {
+export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
   const [touchSquare, setTouchSquare] = useState<boolean>(false);
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
@@ -135,4 +135,6 @@ export function Elipse({ id, selected, data, updateNodeData }: ElipseProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Elipse;

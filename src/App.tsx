@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -17,7 +17,6 @@ import ReactFlow, {
   Edge,
 } from "reactflow";
 import { NodeTypes } from "react-flow-renderer";
-import * as Toolbar from "@radix-ui/react-toolbar";
 import { zinc } from "tailwindcss/colors";
 import { IoIosArrowUp } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
@@ -26,10 +25,6 @@ import "reactflow/dist/style.css";
 import { Square } from "./components/Nodes/Square";
 import { Elipse } from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
-
-type ElementWithContains = Element & {
-  contains(target: EventTarget | null): boolean;
-};
 
 interface NodeData {
   text: string;

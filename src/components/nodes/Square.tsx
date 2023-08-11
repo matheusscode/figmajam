@@ -5,7 +5,7 @@ interface SquareProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
 }
 
-export function Square({ id, selected, data, updateNodeData }: SquareProps) {
+export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
   const [touchSquare, setTouchSquare] = useState<boolean>(false);
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
@@ -46,7 +46,7 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
         textareaRef.current.style.overflow = "hidden";
       }
 
-      if (updateNodeData) { 
+      if (updateNodeData) {
         updateNodeData(id, { ...data, text, height: scrollHeight });
       }
     }
@@ -133,4 +133,6 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Square;
