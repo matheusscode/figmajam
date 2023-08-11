@@ -1,5 +1,5 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ElipseProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
@@ -68,7 +68,7 @@ export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
-    
+
   }, [text, id, updateNodeData, data]);
 
   return (
