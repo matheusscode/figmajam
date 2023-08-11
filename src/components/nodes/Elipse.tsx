@@ -68,6 +68,7 @@ export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
+    
   }, [text, id, updateNodeData, data]);
 
   return (
