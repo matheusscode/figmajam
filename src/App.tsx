@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -27,10 +27,9 @@ import { Square } from "./components/Nodes/Square";
 import { Elipse } from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
 
-interface Position {
-  x: number;
-  y: number;
-}
+type ElementWithContains = Element & {
+  contains(target: EventTarget | null): boolean;
+};
 
 interface NodeData {
   text: string;
@@ -49,7 +48,30 @@ const EDGE_TYPES = {
   default: DefaultEdge,
 };
 
-const INITIAL_NODES = [] as Node[];
+const INITIAL_NODES = [
+  {
+    id: uuidv4(),
+    type: "square",
+    position: {
+      x: 770,
+      y: 300,
+    },
+    data: {
+      text: "",
+    },
+  },
+  {
+    id: uuidv4(),
+    type: "elipse",
+    position: {
+      x: 370,
+      y: 300,
+    },
+    data: {
+      text: "",
+    },
+  },
+] as Node[];
 
 export default function App() {
   const [options, setOptions] = useState<boolean>();
@@ -58,7 +80,6 @@ export default function App() {
   const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
-
   const { project } = useReactFlow();
 
   const onConnect = useCallback((connection: Connection) => {
@@ -153,7 +174,7 @@ export default function App() {
     [nodes, setNodes]
   );
 
-  function addSquareNode() {
+  const addSquareNode = () => {
     setNodes((nodes) => [
       ...nodes,
       {
@@ -168,7 +189,7 @@ export default function App() {
         },
       },
     ]);
-  }
+  };
 
   return (
     <div className="w-screen h-screen relative" ref={reactFlowWrapper}>
@@ -218,9 +239,10 @@ export default function App() {
 function NodeOptions({ options }: any) {
   return (
     <div
-      className={`absolute left-1/2 transform -translate-x-1/2 bg-white rounded-tr-2xl rounded-tl-2xl border border-zinc-300 px-3 h-12 w-1/2 overflow-hidden transition-transform duration-300 ease-in-out ${
+      className={` absolute left-1/2 transform -translate-x-1/2 bg-white rounded-tr-2xl rounded-tl-2xl border border-zinc-300 px-3 h-12 w-1/2 overflow-hidden transition-transform duration-300 ease-in-out ${
         options ? " -translate-y-12 z-2" : " translate-y-0 -z-50"
       }`}
+      style={{ visibility: options ? "visible" : "hidden" }}
     >
       <ul className="flex gap-1 items-center h-full w-full">
         <li>d</li>

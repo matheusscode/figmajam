@@ -46,7 +46,7 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
         textareaRef.current.style.overflow = "hidden";
       }
 
-      if (updateNodeData) {
+      if (updateNodeData) { 
         updateNodeData(id, { ...data, text, height: scrollHeight });
       }
     }
