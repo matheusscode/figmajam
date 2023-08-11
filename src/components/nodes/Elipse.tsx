@@ -1,11 +1,11 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
 import { useEffect, useRef, useState } from "react";
 
-interface SquareProps extends NodeProps {
+interface ElipseProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
 }
 
-export function Square({ id, selected, data, updateNodeData }: SquareProps) {
+export function Elipse({ id, selected, data, updateNodeData }: ElipseProps) {
   const [touchSquare, setTouchSquare] = useState<boolean>(false);
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
@@ -72,7 +72,7 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
 
   return (
     <div
-      className="bg-violet-500 rounded w-full h-full min-w-[200px] min-h-[200px]"
+      className="bg-violet-500 rounded-full w-full h-full min-w-[200px] min-h-[200px]"
       onClick={handleOpenContentSquare}
       onMouseEnter={handleOpenContentSquare}
       onMouseLeave={handleMouseLeave}
@@ -82,7 +82,9 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
         minHeight={200}
         isVisible={selected}
         lineClassName="border-blue-400"
-        handleClassName="h-3 w-3 bg-white border-2 rounded border-blue-400"
+        handleClassName={`h-3 w-3 bg-white border-2 rounded border-blue-400 ${
+          selected ? "opacity-100" : "opacity-0"
+        }`}
       />
 
       <Handle
@@ -125,10 +127,10 @@ export function Square({ id, selected, data, updateNodeData }: SquareProps) {
           onChange={(e) => setText(e.target.value)}
           className={`absolute inset-0 bg-transparent outline-none border-none text-white p-2 resize-none rounded text-center  ${
             expanded
-              ? "h-[200px] transition-all duration-300 p-10"
+              ? "h-[200px] transition-all duration-300 pt-8 px-8"
               : "h-[50px] mt-auto mb-auto transition-all duration-300"
           }`}
-          placeholder={(touchSquare || selected) && active ? "Add Text" : ""}
+          placeholder={(touchSquare || selected) && active ? "Add Text..." : ""}
         />
       </div>
     </div>
