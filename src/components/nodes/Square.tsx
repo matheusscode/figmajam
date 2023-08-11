@@ -1,5 +1,5 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface SquareProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
