@@ -20,11 +20,10 @@ import { NodeTypes } from "react-flow-renderer";
 import { zinc } from "tailwindcss/colors";
 import { IoIosArrowUp } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
-import "reactflow/dist/style.css";
-
 import { Square } from "./components/Nodes/Square";
 import { Elipse } from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
+import "reactflow/dist/style.css";
 
 interface NodeData {
   text: string;
