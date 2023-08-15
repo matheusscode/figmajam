@@ -15,17 +15,17 @@ import ReactFlow, {
   OnConnectEnd,
   OnEdgeUpdateFunc,
   Edge,
+  ReactFlowInstance,
 } from "reactflow";
 import { NodeTypes } from "react-flow-renderer";
 import { zinc } from "tailwindcss/colors";
-import { IoIosArrowUp } from "react-icons/io";
 import { v4 as uuidv4 } from "uuid";
 import "reactflow/dist/style.css";
 
 import Square from "./components/Nodes/Square";
 import Elipse from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
-
+import Sidebar from "./components/Sidebar";
 
 interface NodeData {
   text: string;
@@ -70,12 +70,14 @@ const INITIAL_NODES = [
 ] as Node[];
 
 export default function App() {
-  const [options, setOptions] = useState<boolean>();
   const edgeUpdateSuccessful = useRef(true);
+  const [selectedShape, setSelectedShape] = useState<string>("square");
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance | null>(null);
   const { project } = useReactFlow();
 
   const onConnect = useCallback((connection: Connection) => {
@@ -113,7 +115,7 @@ export default function App() {
           const id = uuidv4();
           const newNode = {
             id,
-            type: "square",
+            type: selectedShape,
             position: project({
               x: clientX - left - 75,
               y: clientY - top,
@@ -170,22 +172,39 @@ export default function App() {
     [nodes, setNodes]
   );
 
-  const addSquareNode = () => {
-    setNodes((nodes) => [
-      ...nodes,
-      {
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+      const type = event.dataTransfer.getData("application/reactflow");
+
+      if (!type || !reactFlowInstance) {
+        return;
+      }
+
+      const position = reactFlowInstance.project({
+        x: event.clientX - (reactFlowBounds?.left || 0),
+        y: event.clientY - (reactFlowBounds?.top || 0),
+      });
+      const newNode: Node = {
         id: uuidv4(),
-        type: "square",
-        position: {
-          x: 750,
-          y: 350,
-        },
+        type: selectedShape,
+        position,
         data: {
           text: "",
         },
-      },
-    ]);
-  };
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance, setNodes]
+  );
 
   return (
     <div className="w-screen h-screen relative" ref={reactFlowWrapper}>
@@ -204,6 +223,9 @@ export default function App() {
         onConnectEnd={onConnectEnd}
         onNodesChange={onNodesChange}
         connectionMode={ConnectionMode.Loose}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onInit={setReactFlowInstance}
         defaultEdgeOptions={{
           type: "default",
         }}
@@ -212,39 +234,11 @@ export default function App() {
         <Background gap={12} size={2} color={zinc[200]} />
         <Controls />
       </ReactFlow>
-
-      <div className="fixed flex bottom-16 left-1/2 z-50 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-16 w-1/3 ">
-        <div className="h-16 overflow-hidden">
-          <button
-            onClick={addSquareNode}
-            className="w-28 h-32 bg-violet-500 mt-6 rounded transition-transform hover:-translate-y-2"
-          />
-        </div>
-        <button
-          className=" absolute  h-6 w-6 ml-1 transform - translate-x-28 ml-2 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
-          onClick={() => setOptions(!options)}
-        >
-          <IoIosArrowUp className="w-6" />
-        </button>
-        <NodeOptions options={options} />
-      </div>
-    </div>
-  );
-}
-
-function NodeOptions({ options }: any) {
-  return (
-    <div
-      className={` absolute left-1/2 transform -translate-x-1/2 bg-white rounded-tr-2xl rounded-tl-2xl border border-zinc-300 px-3 h-12 w-1/2 overflow-hidden transition-transform duration-300 ease-in-out ${
-        options ? " -translate-y-12 z-2" : " translate-y-0 -z-50"
-      }`}
-      style={{ visibility: options ? "visible" : "hidden" }}
-    >
-      <ul className="flex gap-1 items-center h-full w-full">
-        <li>d</li>
-        <li>d</li>
-        <li>d</li>
-      </ul>
+      <Sidebar
+        setNodes={setNodes}
+        selectedShape={selectedShape}
+        setSelectedShape={setSelectedShape}
+      />
     </div>
   );
 }
