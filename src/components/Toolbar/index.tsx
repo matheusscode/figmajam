@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { BsSquare, BsCircle } from "react-icons/bs";
+import React, { useState } from "react";
 
 import { IoIosArrowUp } from "react-icons/io";
 import { Node } from "reactflow";
 import { v4 as uuidv4 } from "uuid";
+import { NodeOptions } from "./NodeOptions";
+import { useToolsContext } from "../../context/ToolsContenxt/ToolsCreate";
 
-interface SidebarProps {
+interface ToolbarProps {
   setNodes: React.Dispatch<
     React.SetStateAction<Node<any, string | undefined>[]>
   >;
-
   selectedShape: string;
   setSelectedShape: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface NodeOptionsProps {
-  options: boolean;
-  selectedShape: string;
-  onShapeButtonClick: (shapeType: string) => void;
-}
-
-export const Sidebar = ({
+export const Toolbar = ({
   setNodes,
   selectedShape,
   setSelectedShape,
-}: SidebarProps) => {
+}: ToolbarProps) => {
   const [options, setOptions] = useState<boolean>(false);
+  const { selectedColor, handleSetColor } = useToolsContext();
 
-  useEffect(() => {}, [selectedShape]);
+  const handleCloseNodeOptions = () => {
+    setOptions(false);
+  };
 
   const addNode = () => {
     setNodes((nodes) => [
@@ -41,6 +38,7 @@ export const Sidebar = ({
         },
         data: {
           text: "",
+          nodeColor: selectedColor,
         },
       },
     ]);
@@ -54,49 +52,9 @@ export const Sidebar = ({
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const NodeOptions = ({ options, onShapeButtonClick }: NodeOptionsProps) => {
-    return (
-      <div
-        className={` absolute left-1/2 transform -translate-x-1/2 bg-white rounded-tr-2xl rounded-tl-2xl border border-zinc-300  h-12 w-1/2 overflow-hidden transition-transform duration-300 ease-in-out ${
-          options ? " -translate-y-12 z-2" : " translate-y-0 -z-50"
-        }`}
-        style={{ visibility: options ? "visible" : "hidden" }}
-      >
-        <div className="flex items-center h-full ">
-          <button
-            onClick={() => onShapeButtonClick("square")}
-            className="flex items-center hover:bg-black bg-opacity-40 p-1 rounded h-full px-3 rounded-tl-2xl hover:text-white"
-          >
-            <BsSquare className="transition-colors duration-300 ease-in-out" />
-          </button>
-          <button
-            onClick={() => onShapeButtonClick("elipse")}
-            className="flex items-center hover:bg-black bg-opacity-40 p-1 rounded  h-full  px-3  hover:text-white"
-          >
-            <BsCircle className="transition-colors duration-300 ease-in-out" />
-          </button>
-        </div>
-
-        <ul className="flex gap-1 items-center h-full border-r-2 border-black ">
-          <li>
-            <button>b</button>
-          </li>
-          <li>
-            <button>b</button>
-          </li>
-          <li>
-            <button>b</button>
-          </li>
-          <li>
-            <button>b</button>
-          </li>
-        </ul>
-      </div>
-    );
-  };
-
   const handleShapeButtonClick = (shapeType: string) => {
     setSelectedShape(shapeType);
+    handleSetColor(selectedColor);
   };
 
   return (
@@ -109,7 +67,8 @@ export const Sidebar = ({
             onDragStart(divEvent, selectedShape);
           }}
           draggable
-          className={`w-28 h-36 bg-violet-500 mt-6 ${
+          style={{ backgroundColor: selectedColor }}
+          className={`w-28 h-36 mt-6 ${
             selectedShape === "elipse" ? "rounded-full" : null
           } transition-all hover:-translate-y-2`}
         />
@@ -121,6 +80,7 @@ export const Sidebar = ({
         <IoIosArrowUp className="w-6" />
       </button>
       <NodeOptions
+        onClose={handleCloseNodeOptions}
         options={options}
         selectedShape={selectedShape}
         onShapeButtonClick={handleShapeButtonClick}
@@ -129,4 +89,4 @@ export const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default Toolbar;

@@ -1,5 +1,6 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
 import { useEffect, useRef, useState } from "react";
+import { useToolsContext } from "../../../context/ToolsContenxt/ToolsCreate";
 
 interface ElipseProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
@@ -10,6 +11,16 @@ export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const { selectedColor } = useToolsContext();
+  const [elipseColor, setElipseColor] = useState(
+    data.nodeColor || selectedColor
+  );
+
+  useEffect(() => {
+    if (data.nodeColor) {
+      setElipseColor(data.nodeColor);
+    }
+  }, [data.nodeColor]);
 
   const handleOpenContentSquare = () => {
     if (!selected) {
@@ -68,12 +79,12 @@ export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
-
   }, [text, id, updateNodeData, data]);
 
   return (
     <div
-      className="bg-violet-500 rounded-full w-full h-full min-w-[200px] min-h-[200px]"
+      className="rounded-full w-full h-full min-w-[200px] min-h-[200px]"
+      style={{ backgroundColor: elipseColor }}
       onClick={handleOpenContentSquare}
       onMouseEnter={handleOpenContentSquare}
       onMouseLeave={handleMouseLeave}
@@ -126,7 +137,7 @@ export const Elipse = ({ id, selected, data, updateNodeData }: ElipseProps) => {
           ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className={`absolute inset-0 bg-transparent outline-none border-none text-white p-2 resize-none rounded text-center  ${
+          className={`absolute inset-0 bg-transparent outline-none border-none text-white p-2 resize-none rounded text-center  max-w-[200px] m-auto ${
             expanded
               ? "h-[200px] transition-all duration-300 pt-8 px-8"
               : "h-[50px] mt-auto mb-auto transition-all duration-300"

@@ -1,5 +1,6 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
 import { useEffect, useRef, useState } from "react";
+import { useToolsContext } from "../../../context/ToolsContenxt/ToolsCreate";
 
 interface SquareProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;
@@ -10,6 +11,16 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
   const [text, setText] = useState<string>(data?.text || "");
   const [active, setActive] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const { selectedColor } = useToolsContext();
+  const [squareColor, setSquareColor] = useState(
+    data.nodeColor || selectedColor
+  );
+
+  useEffect(() => {
+    if (data.nodeColor) {
+      setSquareColor(data.nodeColor);
+    }
+  }, [data.nodeColor]);
 
   const handleOpenContentSquare = () => {
     if (!selected) {
@@ -72,7 +83,8 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
 
   return (
     <div
-      className="bg-violet-500 rounded w-full h-full min-w-[200px] min-h-[200px]"
+      className="rounded w-full h-full min-w-[200px] min-h-[200px]"
+      style={{ backgroundColor: squareColor }}
       onClick={handleOpenContentSquare}
       onMouseEnter={handleOpenContentSquare}
       onMouseLeave={handleMouseLeave}
@@ -89,6 +101,7 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
         id="right"
         type="source"
         position={Position.Right}
+        isValidConnection={(connection) => connection.source === "right"}
         className={`-right-5 w-3 h-3 bg-blue-400/80 ${
           selected ? "opacity-100" : "opacity-0"
         }`}
@@ -97,6 +110,7 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
         id="left"
         type="source"
         position={Position.Left}
+        isValidConnection={(connection) => connection.source === "left"}
         className={`-left-5 w-3 h-3 bg-blue-400/80 ${
           selected ? "opacity-100" : "opacity-0"
         }`}
@@ -106,6 +120,7 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
         id="top"
         type="source"
         position={Position.Top}
+        isValidConnection={(connection) => connection.source === "top"}
         className={`-top-5 w-3 h-3 bg-blue-400/80 ${
           selected ? "opacity-100" : "opacity-0"
         }`}
@@ -114,6 +129,7 @@ export const Square = ({ id, selected, data, updateNodeData }: SquareProps) => {
         id="bottom"
         type="source"
         position={Position.Bottom}
+        isValidConnection={(connection) => connection.source === "bottom"}
         className={`-bottom-5 w-3 h-3 bg-blue-400/80 ${
           selected ? "opacity-100" : "opacity-0"
         }`}

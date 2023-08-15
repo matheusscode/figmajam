@@ -25,7 +25,8 @@ import "reactflow/dist/style.css";
 import Square from "./components/Nodes/Square";
 import Elipse from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
-import Sidebar from "./components/Sidebar";
+import Toolbar from "./components/Toolbar";
+import { useToolsContext } from "./context/ToolsContenxt/ToolsCreate";
 
 interface NodeData {
   text: string;
@@ -34,6 +35,20 @@ interface NodeData {
 interface CustomNode extends Node {
   data: NodeData;
 }
+
+const INITIAL_NODES = [
+  {
+    id: uuidv4(),
+    type: "square",
+    position: {
+      x: 860,
+      y: 300,
+    },
+    data: {
+      text: "",
+    },
+  },
+] as Node[];
 
 const NODE_TYPES: NodeTypes | any = {
   square: Square,
@@ -44,33 +59,9 @@ const EDGE_TYPES = {
   default: DefaultEdge,
 };
 
-const INITIAL_NODES = [
-  {
-    id: uuidv4(),
-    type: "square",
-    position: {
-      x: 770,
-      y: 300,
-    },
-    data: {
-      text: "",
-    },
-  },
-  {
-    id: uuidv4(),
-    type: "elipse",
-    position: {
-      x: 370,
-      y: 300,
-    },
-    data: {
-      text: "",
-    },
-  },
-] as Node[];
-
 export default function App() {
   const edgeUpdateSuccessful = useRef(true);
+  const { selectedColor } = useToolsContext();
   const [selectedShape, setSelectedShape] = useState<string>("square");
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const connectingNodeId = useRef<string | null>(null);
@@ -112,6 +103,7 @@ export default function App() {
               top: 0,
               left: 0,
             };
+
           const id = uuidv4();
           const newNode = {
             id,
@@ -122,6 +114,7 @@ export default function App() {
             }),
             data: {
               text: "",
+              nodeColor: selectedColor,
             },
           };
 
@@ -136,7 +129,7 @@ export default function App() {
         }
       }
     },
-    [project]
+    [project, selectedShape, selectedColor]
   );
 
   const onEdgeUpdateStart = useCallback(() => {
@@ -198,12 +191,13 @@ export default function App() {
         position,
         data: {
           text: "",
+          nodeColor: selectedColor,
         },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, setNodes]
+    [reactFlowInstance, setNodes, selectedShape, selectedColor]
   );
 
   return (
@@ -234,7 +228,7 @@ export default function App() {
         <Background gap={12} size={2} color={zinc[200]} />
         <Controls />
       </ReactFlow>
-      <Sidebar
+      <Toolbar
         setNodes={setNodes}
         selectedShape={selectedShape}
         setSelectedShape={setSelectedShape}
