@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./global.css";
 import { ReactFlowProvider } from "reactflow";
-import { ToolsProvider } from "./context/ToolsContenxt/ToolsProvider.tsx";
+import { ToolsProvider } from "./context/ToolsContext/ToolsProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ToolsProvider>

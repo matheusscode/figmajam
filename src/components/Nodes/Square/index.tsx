@@ -1,6 +1,6 @@
 import { NodeProps, Handle, Position, NodeResizer } from "reactflow";
 import { useEffect, useRef, useState } from "react";
-import { useToolsContext } from "../../../context/ToolsContenxt/ToolsCreate";
+import { useToolsContext } from "../../../context/ToolsContext/ToolsCreate";
 
 interface SquareProps extends NodeProps {
   updateNodeData: (id: string, data: any) => void;

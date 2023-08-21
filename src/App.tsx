@@ -26,7 +26,8 @@ import Square from "./components/Nodes/Square";
 import Elipse from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
 import Toolbar from "./components/Toolbar";
-import { useToolsContext } from "./context/ToolsContenxt/ToolsCreate";
+import { useToolsContext } from "./context/ToolsContext/ToolsCreate";
+import NodeTable from "./components/NodeTable";
 
 interface NodeData {
   text: string;
@@ -63,10 +64,13 @@ export default function App() {
   const edgeUpdateSuccessful = useRef(true);
   const { selectedColor } = useToolsContext();
   const [selectedShape, setSelectedShape] = useState<string>("square");
+  const [selectedNode, setSelectedNode] = useState<CustomNode | null>(null);
+  const [showNodeTable, setShowNodeTable] = useState<boolean>(false);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
+  const [isBrushActive, setIsBrushActive] = useState<boolean>(false);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
   const { project } = useReactFlow();
@@ -97,26 +101,29 @@ export default function App() {
           event.target instanceof HTMLElement &&
           event.target.classList.contains("react-flow__pane");
 
-        if (targetIsPane) {
-          const { top, left } =
-            reactFlowWrapper.current?.getBoundingClientRect() || {
-              top: 0,
-              left: 0,
-            };
-
-          const id = uuidv4();
-          const newNode = {
-            id,
-            type: selectedShape,
-            position: project({
-              x: clientX - left - 75,
-              y: clientY - top,
-            }),
-            data: {
-              text: "",
-              nodeColor: selectedColor,
-            },
+        const { top, left } =
+          reactFlowWrapper.current?.getBoundingClientRect() || {
+            top: 0,
+            left: 0,
           };
+
+        const id = uuidv4();
+        const newNode = {
+          id,
+          type: selectedShape,
+          position: project({
+            x: clientX - left - 75,
+            y: clientY - top,
+          }),
+          data: {
+            text: "",
+            nodeColor: selectedColor,
+          },
+        };
+
+        if (targetIsPane) {
+          setShowNodeTable(true);
+          setSelectedNode(newNode);
 
           setNodes((nds) => nds.concat(newNode));
           setEdges((eds) =>
@@ -228,10 +235,13 @@ export default function App() {
         <Background gap={12} size={2} color={zinc[200]} />
         <Controls />
       </ReactFlow>
+
       <Toolbar
         setNodes={setNodes}
         selectedShape={selectedShape}
         setSelectedShape={setSelectedShape}
+        isBrushActive={isBrushActive}
+        setIsBrushActive={setIsBrushActive}
       />
     </div>
   );

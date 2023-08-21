@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-
 import { IoIosArrowUp } from "react-icons/io";
 import { Node } from "reactflow";
 import { v4 as uuidv4 } from "uuid";
 import { NodeOptions } from "./NodeOptions";
-import { useToolsContext } from "../../context/ToolsContenxt/ToolsCreate";
+import { useToolsContext } from "../../context/ToolsContext/ToolsCreate";
+import pencel from "../../../public/pencel.svg";
+import { Edge } from "reactflow";
 
 interface ToolbarProps {
   setNodes: React.Dispatch<
@@ -12,12 +13,16 @@ interface ToolbarProps {
   >;
   selectedShape: string;
   setSelectedShape: React.Dispatch<React.SetStateAction<string>>;
+  isBrushActive: boolean;
+  setIsBrushActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Toolbar = ({
   setNodes,
   selectedShape,
   setSelectedShape,
+  isBrushActive,
+  setIsBrushActive,
 }: ToolbarProps) => {
   const [options, setOptions] = useState<boolean>(false);
   const { selectedColor, handleSetColor } = useToolsContext();
@@ -58,8 +63,18 @@ export const Toolbar = ({
   };
 
   return (
-    <aside className="fixed flex bottom-16 left-1/2 z-50 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-16 w-1/3 ">
-      <div className="h-16 overflow-hidden">
+    <aside className="fixed flex bottom-16 left-1/2 z-50 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-4 h-16 w-1/3 ">
+      <div className="flex gap-6 h-16 overflow-hidden">
+        <button
+          className={`transition-all hover:-translate-y-2 mix-blend-multiply bg-transparent`}
+          onClick={() => setIsBrushActive(!isBrushActive)}
+        >
+          <img
+            src={pencel}
+            alt="Pencel"
+            className="w-[50px] object-cover mix-blend-multiply bg-transparent mt-2"
+          />
+        </button>
         <button
           onClick={addNode}
           onDragStart={(event) => {
@@ -68,13 +83,13 @@ export const Toolbar = ({
           }}
           draggable
           style={{ backgroundColor: selectedColor }}
-          className={`w-28 h-36 mt-6 ${
+          className={`w-28 h-36 mt-6 Z-10 ${
             selectedShape === "elipse" ? "rounded-full" : null
           } transition-all hover:-translate-y-2`}
         />
       </div>
       <button
-        className=" absolute  h-6 w-6 ml-1 transform - translate-x-28 ml-2 mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
+        className=" absolute  h-6 w-6 ml-1 transform - translate-x-28 ml-[78px] mt-2 border-zinc-700 rounded-2xl  text-xl text-black shadow-md justify-center"
         onClick={() => setOptions(!options)}
       >
         <IoIosArrowUp className="w-6" />
