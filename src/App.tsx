@@ -27,7 +27,6 @@ import Elipse from "./components/Nodes/Elipse";
 import DefaultEdge from "./components/Edges/DefaultEdge";
 import Toolbar from "./components/Toolbar";
 import { useToolsContext } from "./context/ToolsContext/ToolsCreate";
-import NodeTable from "./components/NodeTable";
 
 interface NodeData {
   text: string;
@@ -233,7 +232,7 @@ export default function App() {
       >
         <MiniMap zoomable pannable />
         <Background gap={12} size={2} color={zinc[200]} />
-        <Controls />
+        <Controls />f
       </ReactFlow>
 
       <Toolbar

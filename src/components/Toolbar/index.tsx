@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import { NodeOptions } from "./NodeOptions";
 import { useToolsContext } from "../../context/ToolsContext/ToolsCreate";
 import pencel from "../../../public/pencel.svg";
-import { Edge } from "reactflow";
 
 interface ToolbarProps {
   setNodes: React.Dispatch<

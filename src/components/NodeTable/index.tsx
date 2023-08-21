@@ -1,5 +1,4 @@
 import { BsSquare, BsCircle } from "react-icons/bs";
-import { zinc } from "tailwindcss/colors";
 
 export default function NodeTable() {
   const nodes = [
