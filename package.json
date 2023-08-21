@@ -16,7 +16,7 @@
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.17",
     "react-icons": "^4.10.1",
-    "reactflow": "^11.8.1",
+    "reactflow": "^11.8.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
