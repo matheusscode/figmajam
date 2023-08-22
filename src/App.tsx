@@ -63,8 +63,6 @@ export default function App() {
   const edgeUpdateSuccessful = useRef(true);
   const { selectedColor } = useToolsContext();
   const [selectedShape, setSelectedShape] = useState<string>("square");
-  const [selectedNode, setSelectedNode] = useState<CustomNode | null>(null);
-  const [showNodeTable, setShowNodeTable] = useState<boolean>(false);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const connectingNodeId = useRef<string | null>(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -121,9 +119,6 @@ export default function App() {
         };
 
         if (targetIsPane) {
-          setShowNodeTable(true);
-          setSelectedNode(newNode);
-
           setNodes((nds) => nds.concat(newNode));
           setEdges((eds) =>
             eds.concat({
